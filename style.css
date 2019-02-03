@@ -141,6 +141,9 @@ i {
 .btn-new { top: 45px;}
 .btn-roll { top: 403px;}
 .btn-hold { top: 467px;}
+.btn-rules {top: 550px; font-size: 15px; color: #F24B51}
+
+.btn-rules i {font-size: 28px;}
 
 .dice {
     position: absolute;
@@ -153,3 +156,10 @@ i {
 
 .winner { background-color: #fff; }
 .winner .player-name { font-weight: 300; color: #EB4D4D; }
+
+.modal-content p {
+    font-family: Lato;
+    font-size: 17px;
+    line-height: 26px;
+    padding: 20px;
+}
