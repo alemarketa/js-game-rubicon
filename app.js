@@ -47,10 +47,10 @@ function rollDice()
   if(gamePlaying)
   {
     // choose random number
-    let diceRandom = Math.floor(Math.random() * 6) + 1
+    var diceRandom = Math.floor(Math.random() * 6) + 1
     
     // display the result
-    let dice = document.querySelector('.dice')
+    var dice = document.querySelector('.dice')
     dice.style.display = 'block';
     dice.src = 'dice-' + diceRandom + '.png';
   
