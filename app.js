@@ -13,7 +13,7 @@ Additional:
 
 
 // initialize the game
-var scores, roundScore, activePlayer, gamePlaying, previousThrow
+var scores, roundScore, activePlayer, gamePlaying, previousThrow, winningScore
 document.getElementById('modal-rules').style.display = 'none';
 document.querySelector('.btn-rules').addEventListener('click', toggleModal);
 document.querySelector('.btn-new').addEventListener('click', startGame);
@@ -25,8 +25,12 @@ function startGame() {
   activePlayer = 0;
   gamePlaying = true;
   previousThrow = 0;
+  winningScore = undefined
 
   document.querySelector('.dice').style.display = 'none';
+  document.querySelector('.winning-score').disabled = false; 
+  document.querySelector('.winning-score').value = ""; 
+  document.querySelector('.winning-score').placeholder = "SET FINAL SCORE"; 
   document.querySelector('.btn-roll').addEventListener('click', rollDice);
   document.querySelector('.btn-hold').addEventListener('click', hold);
 
@@ -42,15 +46,32 @@ function startGame() {
   document.querySelector('.player-0-panel').classList.remove('active');
   document.querySelector('.player-1-panel').classList.remove('active');
   document.querySelector('.player-0-panel').classList.add('active');
+  console.log(winningScore)
   
+  /* set default winning score
+  if (winningScore = ' ') {
+    winningScore = 100
+  } */
 }
 
 function rollDice()
 {
   if(gamePlaying)
   {
+
+    // set the winning score
+    if (!winningScore) {
+      winningScore = document.querySelector('.winning-score').value
+      if (winningScore === "") {
+        winningScore = 30
+        document.querySelector('.winning-score').value = 30;
+      }
+      document.querySelector('.winning-score').disabled = true;
+    }
+
+
     // choose random number
-    var diceRandom = Math.floor(Math.random() * 3) + 1
+    var diceRandom = Math.floor(Math.random() * 6) + 1
     
     
     // display the result
@@ -110,6 +131,7 @@ function hold()
 {
   if(gamePlaying)
   {
+
     // add round score to global score
     scores[activePlayer] += roundScore;
     previousThrow = 0 // cleans the var [BUG: PL1 throws 6 and hold, PL2 throws 6 at first throw, he loses his score unfairly ]
@@ -118,7 +140,7 @@ function hold()
     document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
     
     // check if the player won the game 
-    if (scores[activePlayer] >= 100) 
+    if (scores[activePlayer] >= winningScore) 
     {
       document.querySelector('#name-' + activePlayer).textContent = "WINNER!";
       document.querySelector('.dice').style.display = 'none';
