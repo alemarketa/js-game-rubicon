@@ -7,21 +7,24 @@ GAME RULES:
 - The player can choose to 'Hold', which means that his ROUND score gets added to his GLOBAL score. After that, it's the next player's turn
 - The first player to reach 100 points on GLOBAL score wins the game
 
+Additional: 
+- A player looses his entire score when he rolls two 6 in a row. Then it is next player turn.
 */
 
 
 // initialize the game
-var scores, roundScore, activePlayer, gamePlaying
+var scores, roundScore, activePlayer, gamePlaying, previousThrow
 document.getElementById('modal-rules').style.display = 'none';
 document.querySelector('.btn-rules').addEventListener('click', toggleModal);
-startGame()
 document.querySelector('.btn-new').addEventListener('click', startGame);
+startGame()
 
 function startGame() {
   scores = [0, 0]
   roundScore = 0;
   activePlayer = 0;
   gamePlaying = true;
+  previousThrow = 0;
 
   document.querySelector('.dice').style.display = 'none';
   document.querySelector('.btn-roll').addEventListener('click', rollDice);
@@ -47,25 +50,43 @@ function rollDice()
   if(gamePlaying)
   {
     // choose random number
-    var diceRandom = Math.floor(Math.random() * 6) + 1
+    var diceRandom = Math.floor(Math.random() * 3) + 1
+    
     
     // display the result
     var dice = document.querySelector('.dice')
     dice.style.display = 'block';
     dice.src = 'dice-' + diceRandom + '.png';
   
-    // update round score if > 1
-    if (diceRandom !== 1) 
-    { 
-      roundScore += diceRandom
-      document.querySelector('#round-' + activePlayer).textContent = roundScore
-    } 
-    else 
+    
+    // check if previous and current throw are 6
+    if(previousThrow === 6 && diceRandom === 6) 
     {
-        setTimeout(() => {
-          switchPlayer()
-        }, 200);  
+      console.log(scores[activePlayer])
+      scores[activePlayer] = 0
+      document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
+      previousThrow = 0
+      
+      setTimeout(() => {
+        switchPlayer()
+      }, 200);
     }
+    else
+    {
+      // update round score if > 1
+      if (diceRandom !== 1) 
+      { 
+        roundScore += diceRandom
+        document.querySelector('#round-' + activePlayer).textContent = roundScore
+      } 
+      else 
+      {
+          setTimeout(() => {
+            switchPlayer()
+          }, 200);  
+      }
+    }
+    previousThrow = diceRandom
   }
 }
 
@@ -91,6 +112,7 @@ function hold()
   {
     // add round score to global score
     scores[activePlayer] += roundScore;
+    previousThrow = 0 // cleans the var [BUG: PL1 throws 6 and hold, PL2 throws 6 at first throw, he loses his score unfairly ]
     
     // update UI
     document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
@@ -104,7 +126,8 @@ function hold()
       document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
       gamePlaying = false
     }
-    else {
+    else 
+    {
       switchPlayer();
     }
   }
