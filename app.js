@@ -63,8 +63,8 @@ function rollDice()
     if (!winningScore) {
       winningScore = document.querySelector('.winning-score').value
       if (winningScore === "") {
-        winningScore = 30
-        document.querySelector('.winning-score').value = 30;
+        winningScore = 100
+        document.querySelector('.winning-score').value = 100;
       }
       document.querySelector('.winning-score').disabled = true;
     }
